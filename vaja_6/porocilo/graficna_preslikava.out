@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.1}{Dodajanje interpolacije prvega reda}{}% 1
+\BOOKMARK [1][-]{section.2}{Afine preslikave}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Skaliranje s parametri kx = 0.7 in ky = 1.4}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{translacija s parametri tx = 20mm in ty = -30mm}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Rotacija z = -30}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Strig s parametri gxy = 0.1 in gyx = 0.5}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{ Translacija in rotacija tx = -10mm, ty = 20mm, = 15}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.6}{Skaliranje, translacija in rotacija kx = ky = 0.7, tx = 30mm, ty = -20mm, = -15}{section.2}% 8
+\BOOKMARK [1][-]{section.3}{Preslikavi}{}% 9
+\BOOKMARK [1][-]{section.4}{Preslikave z izhodi\235cem v sredini slike}{}% 10
+\BOOKMARK [1][-]{section.5}{Radialna preslikava}{}% 11

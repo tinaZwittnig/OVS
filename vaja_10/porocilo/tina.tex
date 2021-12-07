@@ -1,0 +1,101 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Tina Zwittnig 64200432}
+\title{Poročilo 4. vaje pri predmetu OVS \\ Prikazovanje 3D slik v 2D}
+
+\begin{document}
+\maketitle
+\pagebreak
+\section{Butterworthova filtra}
+\begin{verbatim}
+function oMatrix = getFilterSpectrum(iMatrix, iD0, iType)
+
+oMatrix = iMatrix;
+[N, M] = size(iMatrix);
+
+sredisce = [(N+1)/2, (M+1)/2];
+if strcmp(iType, 'ILPF')
+    for n = 1:N
+        for m = 1:M
+            D = norm([n,m]-sredisce);
+            if D  <=iD0
+                oMatrix(n,m) = 1;
+            end
+        end
+    end
+elseif strcmp(iType, 'BLPF')
+    for n = 1:N
+        for m = 1:M
+            D = norm([n,m]-sredisce);
+            oMatrix(n,m) = 1/(1+(D/iD0)^4);
+        end
+    end               
+elseif strcmp(iType, 'IHPF')
+    for n = 1:N
+        for m = 1:M
+            D = norm([n,m]-sredisce);
+            if D  <=iD0
+                oMatrix(n,m) = 1;
+            end
+        end
+    end
+    oMatrix = 1-oMatrix;
+elseif strcmp(iType, 'BHPF')
+    for n = 1:N
+        for m = 1:M
+            D = norm([n,m]-sredisce);
+            oMatrix(n,m) = 1/(1+(iD0/D)^4);
+        end
+    end   
+    
+end
+end
+\end{verbatim}
+\pagebreak
+\section{Prikazi filtrov in filtriranih slik}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.6]{img1.png}
+    \caption{Originalna slika}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.2]{f1_16.png}
+    \caption{Prikazani filtri in filtrirane slike, če najmanjšo dimenzijo množimo z 1/16}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.2]{f1_4.png}
+    \caption{Prikazani filtri in filtrirane slike, če najmanjšo dimenzijo množimo z 1/4}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.2]{f1_3.png}
+    \caption{Prikazani filtri in filtrirane slike, če najmanjšo dimenzijo množimo z 1/3}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+Opazimo lahko, da je ima filter ILPF oz. IHPF oster rob, medtem ko imata filtra BHPF in BLPF zamegljen rob. Pri filtrirani sliki z ILPF filtrom lahko opazimo zvonenje (nekakšne vzporednice robovom). Medtem, ko ga (zvonenja) Butterworthov filter ne povzroča. 
+Visoko prepustni filtri ostrijo oz. iščejo robove, medtem ko nizki prepustni filtri gladijo. 
+\section{Enosmerna spektralna komponenta}
+Sliko presilkamo s Four. transformacijo = G. Na preslikani sliki izračunamo amplitudni odziv, da dobimo $\lvert G \rvert$. Če iz amplitudnega odziva preberemo element na mestu $(n,m) =(0,0)$ oz. na indeksu $(1,1)$ dobimo spektralno komponento. Če jo delimo z $\sqrt{N\cdot M}$ dobimo ravno povprečno sivinsko vrednost, pri čimer $N, M$ predstavljata velikost slike.\\
+To lahko tudi razberemo iz enačbe v navodilih za $G(m, n)$. Če je $n= m = 0$ je člen z eksponentom vedno 1, tako seštevamo ravno sivinske vrednosti slike. 
+
+\end{document}

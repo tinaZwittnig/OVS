@@ -1,0 +1,24 @@
+%vprasanja
+imsize = [256,512];
+pxDim = [2,1];
+gX = [0 imsize(1)*pxDim(1)];
+gY = [0 imsize(2)*pxDim(2)];
+slika = loadImage('grid-256x512-08bit.raw', imsize, 'uint8');
+originalna= displayImage(slika, 'originalna slika',gX, gY);
+saveas(originalna, 'originalna.png');
+
+
+
+%striženje + skaliranje
+ky = 0.8;
+gxy= 0.5;
+gX = [0 imsize(1)*pxDim(1)];
+gY = [0 imsize(2)*pxDim(2)];
+RS = getParameters('affine', [1 ky], [0 0], 0, [gxy, 0]);
+RS_transformirana = transformImage('affine',slika , pxDim, inv(RS) ,63,0);
+skalirana_nictega = displayImage(RS_transformirana, 'RS slika',gX,gY);
+saveas(skalirana_nictega, 'prva_nictega.png')
+
+RS_transformirana_prvega = transformImage('affine',slika , pxDim, inv(RS) ,63,1);
+skalirana_prvega = displayImage(RS_transformirana_prvega, 'RS slika',gX,gY);
+saveas(skalirana_prvega, 'prva_prvega.png')

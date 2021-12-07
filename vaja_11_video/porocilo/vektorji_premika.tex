@@ -1,0 +1,66 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Tina Zwittnig 64200432}
+\title{Poročilo 11. vaje pri predmetu OVS \\ Vektor premika}
+
+\begin{document}
+\maketitle
+\pagebreak
+\section{napoved slike}
+Izračunali smo vektorje premika in s pomočjo njih napovedali, kje se bo nahajal kvadrat v naslednjih framih. Vidimo, da razlika ni črna, to pa je pripisati velikosti bloka. Če bi vezli manjši blok, bi bila napoved verjetno boljša.
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.4]{prva.png}
+    \caption{Izris slik, napovedane slike in slika razlike med napovedano sliko in sliko, katero smo poskušali napovedati}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\section{Video}
+\begin{verbatim}
+  ovid = VideoWriter('VektorjiPremika.avi');
+
+ivid = VideoReader('simple-video.avi');
+fram = ivid.Duration * ivid.FrameRate;
+open(ovid);
+
+for i = 1:fram-1
+
+    I1 = read(ivid, i);
+    I2 = read(ivid, i+1);
+
+    bSize = [8,8];
+    sSize = 2^4-1;
+
+    [MF, CP] = blockMatching(I1, I2, bSize, sSize);
+    quiver(CP(:,:,1), CP(:,:,2), MF(:,:,1), MF(:,:,2), 'r-') %ne uporabimo funkcije, da se nam ne odpre 150 figure.
+    set(gca, 'Ydir', 'reverse');
+    axis image
+    frame = getframe(gcf);
+    writeVideo(ovid,frame);
+end
+
+close(ovid);
+\end{verbatim}
+\pagebreak
+\section{polje  vektorjev  premika}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.4]{tretja.png}
+    \caption{Originalna slika, slika pri naslednjem frame-u, vektorji premika in Superponirani vektorji premika}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+Pri realnem videu vidimo, da je vektorjev premika več, in da so bolj naključno razporejeni, kot pri prvem videu. 
+
+\end{document}

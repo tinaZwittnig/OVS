@@ -1,0 +1,213 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Tina Zwittnig 64200432}
+\title{Poročilo 4. vaje pri predmetu OVS \\ Prikazovanje 3D slik v 2D}
+
+\begin{document}
+\maketitle
+\pagebreak
+\section{Pravokotne ravninske projekcije}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \begin{center}
+    \includegraphics[scale =0.7]{../pictures/celni_prikaz.png}
+    \caption{Čelni prerez}
+  \end{center}
+    \end{minipage}%
+    \begin{minipage}{0.5\textwidth}
+        \begin{center}
+    \includegraphics[scale =0.8]{../pictures/stranski_prikaz.png}
+    \caption{Stranski prerez}
+  \end{center}
+    \end{minipage}
+\end{figure}
+
+
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics{../pictures/precni_prikaz.png}
+    \caption{Prečni prerez}
+  \end{center}
+\end{figure}
+\pagebreak
+\section{Pravokotne ravninse projekcije z maksimalno in povprečno vrednostjo}
+\begin{figure}[!htb]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \begin{center}
+    \includegraphics[scale =0.7]{../pictures/celni_maks.png}
+    \caption{Čelna projekcija maksimalnih \\ vrednosti prerezov}
+  \end{center}
+    \end{minipage}%
+    \begin{minipage}{0.5\textwidth}
+        \begin{center}
+    \includegraphics[scale =0.8]{../pictures/stran_maks.png}
+    \caption{Stranska projekcija maksimalnih \\ vrednosti prerezov}
+  \end{center}
+    \end{minipage}
+\end{figure}
+
+
+\pagebreak
+\begin{figure}[htb!]
+  \begin{center}
+    \includegraphics{../pictures/precni_maks.png}
+    \caption{Prečna projekcija  povprečnih vrednosti prerezov}
+  \end{center}
+  \end{figure}
+\pagebreak
+\begin{figure}[!htb]
+    \centering
+    \begin{minipage}{.5\textwidth}
+        \begin{center}
+    \includegraphics[scale =0.7]{../pictures/celni_mean.png}
+    \caption{Čelna projekcija povprečnih \\ vrednosti prerezov}
+  \end{center}
+    \end{minipage}%
+    \begin{minipage}{0.5\textwidth}
+        \begin{center}
+    \includegraphics[scale =0.8]{../pictures/stran_mean.png}
+    \caption{Stranska projekcija povprečnih \\ vrednosti prerezov}
+  \end{center}
+    \end{minipage}
+\end{figure}
+
+
+\pagebreak
+\begin{figure}[htb!]
+  \begin{center}
+    \includegraphics{../pictures/precni_mean.png}
+    \caption{Prečna projekcija povprečnih vrednosti }
+  \end{center}
+  \end{figure}
+\section{Smiselnost projekcij}
+\textit{Katere vrste projekcij, pri katerih za funkcijo točk uporabite maksimalno vrednost,
+minimalno vrednost, povprečno vrednost, vrednost mediane, vrednost standardnega
+odklona oz. vrednost variance, je v primeru prikazovanja CT slik človeškega telesa sploh
+smiselno računati? Obrazložite odgovor.}
+
+Najbolj smiselne so pravokotne čelna, stranska in prečna projekcija. Za funkcijo točk lahko vzamemo maksimalno vrednost, če nas zanimajo npr. Kosti. Pri minimalni vrednosti lahko vidimo, kje je zrak in s tem vidimo, ali je kaj v pljučih, kar ne bi smelo biti. S standardnem odklonom lahko izračunamo kakšen je šum slike zaradi zunjanih pojavov. Pri mediani lahko opazimo ali je neko področje bolj gosto kosti ali manj. Uporabljajo se tudi poševni ravninski prerezi, kjer lahko vidimo neko poškodbo, ki jo pri čelnem pogledu prekriva kakšna kost.  Uporabne so pa tudi ne ravninske projekcije, naprimer projekcija na ploskev, ki oklepa hrbtenico. Tako bi lahko hrbtenico brez popačenj prenesli na ravnino. Pri ne-ravninskih projekcijah je treba vedeti, kaj delamo,  kakšno ploskev vzamemo. Dobimo lahko velika popačenja, ker se nam lahko projekcijski žarki sekajo med sabo. 
+
+\section{Funkcija loadImage3D}
+\textit{Spremenite funkcijo} {\ttfamily loadImage3D()} \textit{tako, da 3D sliko najprej naložite kot vektor, nato pa
+ta vektor preoblikujete v 3D matriko s pomočjo Matlabove  funckije }{\ttfamily reshape()}.\textit{ Priložite
+programsko kodo tako spremenjene funkcije.}
+\begin{verbatim}
+function oImage = loadImage3D(iPath, iSize, iType)
+% funkcija zapiše raw sliko v obliki matirke
+% vhodni podatki :
+%   iPath - vhodna datoteka
+%   iSize - velikost slike
+%   iType - tip podatkov, v katerem je zapisana datoteka
+% izhodni podatek:
+%   oImage - slika zapisana v matriki 
+
+% nalozi 3D sliko
+fid = fopen(iPath, 'r');
+all = fread(fid, prod(iSize), iType);
+oImage = reshape(all, iSize(2), iSize(1),iSize(3));
+
+fclose(fid);
+end  
+
+\end{verbatim}
+\section{Rotirana ravnina}
+
+S to nalogo sem imela nekaj težav, kar se odraža tudi pri stilu in hitrosti kode. 
+\begin{verbatim}
+  elseif iNormVec(3) == 0
+    xn = iNormVec(1);
+    yn = iNormVec(2);
+    %izračunamo kot glede na normo
+    phi = atan(xn/yn);
+    rotirana = zeros(N_cor, N_sag, N_ax);
+     for x = 0:N_sag-1
+         for y = 0:N_cor-1
+             %rotacija in translacija indeksa
+             x2 = round((x-N_sag/2) * cos(phi) - (y-N_cor/2) * sin(phi)+ N_sag/2);
+             y2 = round((x-N_sag/2) * sin(phi) + (y -N_cor/2) * cos(phi) + N_cor/2);
+             for z = 0:N_ax-1
+                 %pogledamo, ali pademo "ven"
+                 if x2<0 | y2<0 | x2>=N_sag |y2>=N_cor
+                   rotirana(y+1,x+1,z+1) = 0;
+                else
+                 %pogledamo kaj je na tem indeksu
+                 rotirana(y+1,x+1,z+1) = iImage(y2+1,x2+1,z+1);
+                end
+                     
+                
+                
+             end
+                 
+         end
+     end
+% na preseke dodamo funkcijo
+    oP = zeros(N_ax,N_sag);
+
+    for z=1:N_ax
+        for x = 1:N_sag
+            oP(z,x) = feval(iFunc, rotirana(:,x,z));
+        end
+    end
+    
+% odrežemo črnino na levi in desni
+    for xod = 1: N_sag
+        if max(oP(:,xod))
+            k = xod;
+            break
+           
+        end
+    end
+        for xod = N_sag:-1:1
+        if max(oP(:,xod))
+            k2 = xod;
+            break
+           
+        end
+        end
+oH = (0:(k2-k)-1).*(iDim(1).*cos(phi)+iDim(2)*sin(phi));
+oV = (0:N_ax-1).*iDim(3);
+oP = oP(:,k:k2);
+end
+\end{verbatim}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.9]{../pictures/rotirana1.png}
+    \caption{Primer maksimalne vrednosti prerezov pri $\vec{n}_1 = (3,83, 9,24, 0)$}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics{../pictures/rotirana2.png}
+    \caption{Primer maksimalne vrednosti prerezov pri $\vec{n}_2 = (1, 1, 0)$}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics{../pictures/rotirana3.png}
+    \caption{Primer maksimalne vrednosti prerezov pri $\vec{n}_3 = (9,24, 3,83, 0)$}
+  \end{center}
+\end{figure}
+\pagebreak
+
+Slabosti uporabljenega pristopa je, da izgubimo podatke o sliki, ker nobena točka ne pade na njih (zaradi rotacije). Tako lahko spregledamo kakšno poškodbo. Pri pristopu uporabimo interpolacijo, tako da ni nujno da zajamemo vse točke (ker morda kakšna točka ni najbljižji sosed.) Pri Stranski projekciji lahko  pride do tega, da je v sliki le del organa, nato del organa pade iz slike in nam taka slika ne koristi. Moj algoritem je tudi zelo časovno potraten, verjemam da se ga da zelo optimizirati. 
+\begin{thebibliography}{9}
+\bibitem{MIP}\textbf{Maximum intensity projection}, Wikipedia, dostopno na: \url{https://en.wikipedia.org/wiki/Maximum_intensity_projection} [ogled 3.11.2020]
+\bibitem{CT}\textbf{CT scan}, Wikipedia, dostopno na: \url{https://en.wikipedia.org/wiki/CT_scan} [ogled 3.11.2020]
+\bibitem{IJS}\textbf{Računalniška tomografija (CT) VI}, IJS, dostopno na: \url{http://www-f9.ijs.si/~krizan/sola/medfiz/slides/fiz-anat-slik/7FAS-CT.pdf}[ogled 3.11.2020]
+
+\end{thebibliography}
+\end{document}

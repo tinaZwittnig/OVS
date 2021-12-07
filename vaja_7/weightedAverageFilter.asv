@@ -1,0 +1,20 @@
+function oFilter = weightedAverageFilter(iM, iN, iValue)
+% weightedAverageFilter vrne filter z urteženim povprečjem, z osnovo
+% iValue, velikosti N x M
+%vhodni parametri:
+%   iM - velikost filtra v y osi
+%   iN - velikost filtra v x osi
+%izhodni parameter:
+%   oFilter - filter uteženega povprečenja
+
+oFilter = ones(iM,iN)
+for x = 1:(iN/2)+1
+    for y = 1:(iM/2)+1
+        oFilter(x,y) = iValue^(x-1) *iValue^(y-1);
+        oFilter(end-x+1,y) = iValue^(x-1) *iValue^(y-1);
+        oFilter(x, end-y+1) = iValue^(x-1) *iValue^(y-1);
+        oFilter(end-x+1,end-y+1) = iValue^(x-1) *iValue^(y-1);
+    end
+end
+%oFilter((iM/2)+1:end,(iN/2)+1:end) = oFilter(1:(iM/2),1:(iN/2))
+end

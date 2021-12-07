@@ -1,0 +1,189 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[slovene]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Tina Zwittnig 64200432}
+\title{Poročilo 7. vaje pri predmetu OVS \\ Prostorsko filtriranje slik}
+
+
+\begin{document}
+\maketitle
+\pagebreak
+\section{Prikazi slik z različnimi filtriranji}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{original.png}
+    \caption{Originalna slika}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{slika2.png}
+    \caption{Slika filtrirana z jedrom}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{slika3.png}
+    \caption{Slika filtrirana s statističnim filtrom}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{slika4.png}
+    \caption{Slika filtrirana morfološkim filtriranjem}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\section{Filter uravnoteženega povprečenja}
+\begin{verbatim}
+  function oFilter = weightedAverageFilter(iM, iN, iValue)
+% weightedAverageFilter vrne filter z urteženim povprečjem, z osnovo
+% iValue, velikosti N x M
+%vhodni parametri:
+%   iM - velikost filtra v y osi
+%   iN - velikost filtra v x osi
+%izhodni parameter:
+%   oFilter - filter uteženega povprečenja
+
+oFilter = ones(iN, iM);
+for x = 1:(iM/2)+1
+    for y = 1:(iN/2)+1
+        oFilter(y,x) = iValue^(x-1) *iValue^(y-1);
+        oFilter(y,end-x+1) = iValue^(x-1) *iValue^(y-1);
+        oFilter(end-y+1,x) = iValue^(x-1) *iValue^(y-1);
+        oFilter(end-y+1,end-x+1) = iValue^(x-1) *iValue^(y-1);
+    end
+end
+vsota = sum(sum(oFilter(:)))
+oFilter = oFilter./vsota;
+end
+
+\end{verbatim}
+Če vzamemo filter z osnovo 1, je to navadna aritmetična sredina - torej filter aritmetičega povprečenja.
+\section{Sobelova operatorja}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{gx.png}
+    \caption{Slika, na kateri je uporabljen filter gx, preslikana v sivinske vrednosi [0,...,255]}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{gy.png}
+    \caption{Slika, na kateri je uporabljen filter gy, preslikana v sivinske vrednosi [0,...,255]}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{Gxy.png}
+    \caption{Amplitudni odziv zgornjih dveh slik}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{phi.png}
+    \caption{fazni odziv zgornjih dveh slik, preslikan v sivinske vrednosti [0,...,255]}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\section{Ostrenje slike}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{maska.png}
+    \caption{maska, dobljena z Gaussovim glajenjem, preslikana v sivinske vrednosti [0,...,255]}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{ostra.png}
+    \caption{Izostrena slika}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\section{spreminjanje prostorske domene slike }
+Kodo sem oddala skupaj z poročilom. Koda je precej grda in časovno neučinkovita, menim, da bi se dalo boljše. Pri zrcaljenju se sprehajamo od leve proti desni, ko pridemo do konca originalne slike, se obrnemo in se sprehajamo od desne proti levi. Podobno tudi v drugi smeri. Podobno rešitev sem implementirala tudi pri periodični nalogi, samo da ko pridemo do konca originalne slike se vrnemo nazaj na začetek in gremo ponovno od leve proti desni. 
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{constant.png}
+    \caption{Razširitev z konstantno sivinsko vrednostjo}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{flip.png}
+    \caption{Razširitev z zrcaljenjem sivinskih vrednosti}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{period.png}
+    \caption{Razširitev s periodičnim ponavljanjem sivinskih vrednosti}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{povec.png}
+    \caption{Razširitev z ekstrapolacijo sivinskih vrednosti}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\section{vpliv načina razširitve prostorske domene}
+Razširitev vpliva le pri robovih slike. Osredotočimo se na morfološko filtriranje, kjer imamo v zgledu največji filter, pa tudi vzamemo minimalen oz. maksimalen element, kar se pri filtiranju najbolj pozna. 
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{slika4.png}
+    \caption{Slika filtrirana morfološkim filtriranjem, razširitev z konstantno sivinsko vrednostjo 0}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{C2.png}
+    \caption{Slika filtrirana morfološkim filtriranjem, razširitev z ekstrapolacijo}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\pagebreak
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{C3.png}
+    \caption{Slika filtrirana morfološkim filtriranjem, razširitev z zrcaljenjem}
+    \label{fig:}
+  \end{center}
+\end{figure}
+\begin{figure}[h!]
+  \begin{center}
+    \includegraphics[scale = 0.8]{C4.png}
+    \caption{Slika filtrirana morfološkim filtriranjem, razširitev z periodo}
+    \label{fig:}
+  \end{center}
+\end{figure}
+
+Kot vidimo se najboljše izkažejo razširitev z ekstrapolacijo in razširitev z zrcaljenjem. Ker razširimo sliko z vrednostmi, ki so pri robu in na katere filter vpliva, ko jemlje vrednosti iz razširjenega območja. Če vzamemo razširitev z konstantno vrednostjio se bo ta vrednost poznala na robu slike. Če vzamemo razširitev z zrcaljenjem se nam pas vrednosti na katerega bo vplival filter preslika na \textquotedblleft zunanji\textquotedblright  pas originalne slike, kjer bo filter vzemal vrednosti. Tako bo filter imel podobne vrednosti, kot so v sliki in s tem ne bo bistveno vplival na vrednosti v sami sliki. Podobno je tudi z razširitvijo z ekstrapolacijo. Če pogledamo sliko, ki je bila razširjena periodično vidimo, da takšna razširitev ni primerna. Vrednosti, ki so na nasprotnem robu vplivajo na vrednosti na danem robu, kar je nesmiselno, saj so lokacijsko drugje.  
+\end{document}

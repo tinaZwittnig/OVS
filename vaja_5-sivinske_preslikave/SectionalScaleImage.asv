@@ -1,0 +1,39 @@
+function oImage = SectionalScaleImage(iImage, iS, oS)
+%SectionalScaleImage naredi odsekoma nelinearno preslikavo z danimi parametri
+%vhodni elementi:
+%   iImage - vhodna slika v obliki matrike
+%   iS - seznam x komponent kontrolnih točk
+%   oS - seznam y komponent kontrolnih točk
+%izhodni elementi
+%   oImgae - preslikana slika
+
+oImage = iImage;
+for i = 1: 2:length(iS)-2
+    Ax = iS(i);% tocka A
+    Bx = iS(i+1);% tocka B
+    Cx = iS(i+2); %tocka C
+    
+    D = [6Ax 2]
+    sistem = [Ax^3 Ax^2 Ax 1;
+              Bx^3 Bx^2 Bx 1;
+              Cx^3 Cx^2 Cx 1;
+              Dx^3 Dx^2 Dx 1]; % izračunane vrednosti za sistem enačb
+   Ay = oS(i);
+   By = oS(i+1);
+   Cy = oS(i+2);
+   Dy = oS(i+3);
+   Y = [Ay;
+       By;
+       Cy;
+       Dy]; %Y komponente enačbe
+   
+   koeficienti = sistem\Y; %rešimo sistem enačb
+   
+   a1 = koeficienti(1);
+   b1 = koeficienti(2);
+   c1 = koeficienti(3);
+   d1 = koeficienti(4);
+   tmp = find(iImage>=Ax & iImage<=Cx);
+   %kvadratna funkcija a1*x^2 + b1*x + c1
+   oImage(tmp) = a1*iImage(tmp).^3 + b1 * iImage(tmp).^2 +c1* iImage(tmp)+ d1;
+end
